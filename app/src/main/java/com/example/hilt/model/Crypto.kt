@@ -7,12 +7,12 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "contact_table")
-class Contact(
+@Entity(tableName = "Crypto_table")
+class Crypto(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id: Int? = null,
     @ColumnInfo(name = "name_col") var name: String = "",
-    @ColumnInfo(name = "email_col") var email: String = "",
-    @ColumnInfo(name = "phone_number_col") var phoneNumber: String = ""
+    @ColumnInfo(name = "price_col") var price: String = "",
+    @ColumnInfo(name = "url_col") var url: String = ""
 ) : Parcelable

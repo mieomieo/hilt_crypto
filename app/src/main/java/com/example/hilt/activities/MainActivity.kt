@@ -9,11 +9,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.hilt.adapter.ContactAdapter
-import com.example.hilt.adapter.ContactSearchAdapter
+import com.example.hilt.adapter.CryptoAdapter
+import com.example.hilt.adapter.CryptoSearchAdapter
 import com.example.hilt.databinding.ActivityMainBinding
-import com.example.hilt.model.Contact
-import com.example.hilt.viewmodel.ContactViewModel
+import com.example.hilt.model.Crypto
+import com.example.hilt.viewmodel.CryptoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.Normalizer
@@ -23,7 +23,7 @@ import kotlin.random.Random
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val contactViewModel: ContactViewModel by viewModels()
+    private val cryptoViewModel: CryptoViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
 
     @SuppressLint("SetTextI18n")
@@ -37,16 +37,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initControls() {
-        val adapterContact = ContactAdapter(this@MainActivity, onItemClick, onItemDelete)
-        val adapterSearchContact =
-            ContactSearchAdapter(this@MainActivity, onItemClick, onItemDelete)
-        binding.rvContacts.setHasFixedSize(true)
-        binding.rvContacts.layoutManager = LinearLayoutManager(this)
-        binding.rvContacts.adapter = adapterContact
+        val adapterCrypto = CryptoAdapter(this@MainActivity, onItemClick, onItemDelete)
+        val adapterSearchCrypto =
+            CryptoSearchAdapter(this@MainActivity, onItemClick, onItemDelete)
+        binding.rvCryptos.setHasFixedSize(true)
+        binding.rvCryptos.layoutManager = LinearLayoutManager(this)
+        binding.rvCryptos.adapter = adapterCrypto
 
-        binding.recyclerViewListSearchContacts.setHasFixedSize(true)
-        binding.recyclerViewListSearchContacts.layoutManager = LinearLayoutManager(this)
-        binding.recyclerViewListSearchContacts.adapter = adapterSearchContact
+        binding.recyclerViewListSearchCryptos.setHasFixedSize(true)
+        binding.recyclerViewListSearchCryptos.layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewListSearchCryptos.adapter = adapterSearchCrypto
 
 
         binding.searchView.editText.addTextChangedListener(object : TextWatcher {
@@ -59,14 +59,14 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val text = getTextSearch(s.toString())
                 lifecycleScope.launch {
-                    contactViewModel.getFlowAllContact().collect { list ->
+                    cryptoViewModel.getFlowAllCrypto().collect { list ->
 
-                        val filteredContact = list.filter {
+                        val filteredCrypto = list.filter {
                             getTextSearch(it.name).contains(
                                 text, ignoreCase = true
                             )
                         }
-                        adapterSearchContact.updateContact(filteredContact)
+                        adapterSearchCrypto.updateCrypto(filteredCrypto)
                     }
                 }
             }
@@ -77,9 +77,9 @@ class MainActivity : AppCompatActivity() {
         })
 
         lifecycleScope.launch {
-            contactViewModel.apply {
-                getFlowAllContact().collect { list ->
-                    adapterContact.setContacts(list)
+            cryptoViewModel.apply {
+                getFlowAllCrypto().collect { list ->
+                    adapterCrypto.setCryptos(list)
                 }
             }
         }
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initEvents() {
         binding.btFloat.setOnClickListener {
-            val intent = Intent(this, AddContactActivity::class.java)
+            val intent = Intent(this, AddCryptoActivity::class.java)
             startActivity(intent)
 
         }
@@ -126,12 +126,12 @@ class MainActivity : AppCompatActivity() {
         return pattern.matcher(nfdNormalizedString).replaceAll("")
     }
 
-    private val onItemClick: (Contact) -> Unit = {
-        val intent = Intent(this@MainActivity, DetailContactActivity::class.java)
-        intent.putExtra("DETAIL_CONTACT", it)
+    private val onItemClick: (Crypto) -> Unit = {
+        val intent = Intent(this@MainActivity, DetailCryptoActivity::class.java)
+        intent.putExtra("DETAIL_Crypto", it)
         startActivity(intent)
     }
-    private val onItemDelete: (Contact) -> Unit = {
-        contactViewModel.deleteContact(it)
+    private val onItemDelete: (Crypto) -> Unit = {
+        cryptoViewModel.deleteCrypto(it)
     }
 }

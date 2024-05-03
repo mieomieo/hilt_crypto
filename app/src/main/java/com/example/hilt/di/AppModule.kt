@@ -2,8 +2,8 @@ package com.example.hilt.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.hilt.database.ContactDatabase
-import com.example.hilt.database.dao.ContactDao
+import com.example.hilt.database.CryptoDatabase
+import com.example.hilt.database.dao.CryptoDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,14 +15,14 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideContactDatabase(application: Application) : ContactDatabase {
+    fun provideCryptoDatabase(application: Application) : CryptoDatabase {
         return Room.databaseBuilder(
-            application.applicationContext,ContactDatabase::class.java,"contact_db"
+            application.applicationContext,CryptoDatabase::class.java,"crypto_db"
         ).build()
     }
     @Provides
     @Singleton
-    fun provideContactDao(db:ContactDatabase):ContactDao{
-        return db.contactDao()
+    fun provideCryptoDao(db:CryptoDatabase):CryptoDao{
+        return db.CryptoDao()
     }
 }
